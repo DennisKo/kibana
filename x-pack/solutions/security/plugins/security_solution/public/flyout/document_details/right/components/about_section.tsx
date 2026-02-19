@@ -9,6 +9,7 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { isEmpty } from 'lodash';
 import { buildDataTableRecord, type DataTableRecord, type EsHitRecord } from '@kbn/discover-utils';
 import { useExpandableFlyoutApi } from '@kbn/expandable-flyout';
+import { ALERT_REASON } from '@kbn/rule-data-utils';
 import { ExpandableSection } from '../../../../flyout_v2/shared/components/expandable_section';
 import { useExpandSection } from '../../../../flyout_v2/shared/hooks/use_expand_section';
 import { RULE_PREVIEW_BANNER, RulePreviewPanelKey } from '../../../rule_details/right';
@@ -16,8 +17,8 @@ import { useKibana } from '../../../../common/lib/kibana';
 import { useUserPrivileges } from '../../../../common/components/user_privileges';
 import { FLYOUT_STORAGE_KEYS } from '../../shared/constants/local_storage';
 import { useBasicDataFromDetailsData } from '../../shared/hooks/use_basic_data_from_details_data';
+import { DocumentDetailsAlertReasonPanelKey } from '../../shared/constants/panel_keys';
 import { ABOUT_SECTION_TEST_ID } from './test_ids';
-import { Reason } from './reason';
 import { MitreAttack } from './mitre_attack';
 import { getField } from '../../shared/utils';
 import { EventKind } from '../../shared/constants/event_kinds';
@@ -30,6 +31,10 @@ import { AlertStatus } from './alert_status';
 import { DocumentEventTypes } from '../../../../common/lib/telemetry';
 import { AlertDescription } from '../../../../flyout_v2/document_details/components/alert_description';
 import { ABOUT_SECTION_TITLE } from '../../../../flyout_v2/document_details/components/about_section';
+import {
+  ALERT_REASON_BANNER,
+  Reason,
+} from '../../../../flyout_v2/document_details/components/reason';
 
 const KEY = 'about';
 
@@ -41,12 +46,20 @@ const KEY = 'about';
  */
 export const AboutSection = memo(() => {
   const { telemetry } = useKibana().services;
-  const { dataFormattedForFieldBrowser, getFieldsData, isRulePreview, scopeId, searchHit } =
-    useDocumentDetailsContext();
+  const {
+    dataFormattedForFieldBrowser,
+    eventId,
+    getFieldsData,
+    indexName,
+    isRulePreview,
+    scopeId,
+    searchHit,
+  } = useDocumentDetailsContext();
   const { rulesPrivileges } = useUserPrivileges();
   const { openPreviewPanel } = useExpandableFlyoutApi();
 
   const { ruleId, ruleName } = useBasicDataFromDetailsData(dataFormattedForFieldBrowser);
+  const alertReason = getField(getFieldsData(ALERT_REASON));
   const eventKind = getField(getFieldsData('event.kind'));
   const eventKindInECS = eventKind && isEcsAllowedValue('event.kind', eventKind);
 
@@ -79,6 +92,22 @@ export const AboutSection = memo(() => {
     });
   }, [openPreviewPanel, scopeId, ruleId, telemetry]);
 
+  const openAlertReasonPreview = useCallback(() => {
+    openPreviewPanel({
+      id: DocumentDetailsAlertReasonPanelKey,
+      params: {
+        id: eventId,
+        indexName,
+        scopeId,
+        banner: ALERT_REASON_BANNER,
+      },
+    });
+    telemetry.reportEvent(DocumentEventTypes.DetailsFlyoutOpened, {
+      location: scopeId,
+      panel: 'preview',
+    });
+  }, [eventId, indexName, openPreviewPanel, scopeId, telemetry]);
+
   const content =
     eventKind === EventKind.signal ? (
       <>
@@ -87,7 +116,11 @@ export const AboutSection = memo(() => {
           onShowRuleSummary={openRulePreview}
           ruleSummaryDisabled={ruleSummaryDisabled}
         />
-        <Reason />
+        <Reason
+          hit={hit}
+          onShowFullReason={openAlertReasonPreview}
+          fullReasonDisabled={isEmpty(alertReason)}
+        />
         <MitreAttack />
         <AlertStatus />
       </>
