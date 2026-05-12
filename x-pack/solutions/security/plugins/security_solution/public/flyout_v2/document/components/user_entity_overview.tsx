@@ -18,6 +18,7 @@ import {
 import { css } from '@emotion/react';
 import { getOr } from 'lodash/fp';
 import { i18n } from '@kbn/i18n';
+import type { TimeRange } from '@kbn/es-query';
 import { MISCONFIGURATION_INSIGHT_USER_ENTITY_OVERVIEW } from '@kbn/cloud-security-posture-common/utils/ui_metrics';
 import { useHasMisconfigurations } from '@kbn/cloud-security-posture/src/hooks/use_has_misconfigurations';
 import { FF_ENABLE_ENTITY_STORE_V2, useEntityStoreEuidApi } from '@kbn/entity-store/public';
@@ -110,6 +111,10 @@ export interface UserEntityOverviewProps {
    * leave this off so everything renders as plain text.
    */
   enableEntityLinks?: boolean;
+  /**
+   * Time range supplied by the host application for time-bound insights.
+   */
+  timerangeOverride?: TimeRange;
 }
 
 export const USER_PREVIEW_BANNER = {
@@ -130,8 +135,11 @@ export const UserEntityOverview: React.FC<UserEntityOverviewProps> = ({
   scopeId = '',
   renderCellActions = noopCellActionRenderer,
   enableEntityLinks = false,
+  timerangeOverride,
 }) => {
-  const { from, to } = useGlobalTime();
+  const globalTime = useGlobalTime();
+  const from = timerangeOverride?.from ?? globalTime.from;
+  const to = timerangeOverride?.to ?? globalTime.to;
   const { selectedPatterns: oldSelectedPatterns } = useSourcererDataView();
   const entityStoreV2Enabled = useUiSetting<boolean>(FF_ENABLE_ENTITY_STORE_V2, false);
   const euidApi = useEntityStoreEuidApi();
@@ -417,6 +425,7 @@ export const UserEntityOverview: React.FC<UserEntityOverviewProps> = ({
         entityType={EntityType.user}
         queryId={`${DETECTION_RESPONSE_ALERTS_BY_STATUS_ID}-${USER_ENTITY_OVERVIEW_ID}`}
         data-test-subj={ENTITIES_USER_OVERVIEW_ALERT_COUNT_TEST_ID}
+        timerangeOverride={timerangeOverride}
       />
       <MisconfigurationsInsight
         identityFields={userIdentityFields}

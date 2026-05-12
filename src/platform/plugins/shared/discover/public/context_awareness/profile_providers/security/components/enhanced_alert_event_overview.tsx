@@ -33,7 +33,10 @@ export const EnhancedAlertEventOverview = ({
     'security-solution-alert-flyout-overview-tab'
   );
   const handleAlertUpdated = refreshData ?? noop;
+  const timeRange = providerServices.timefilter.getTime();
 
   const render = alertFlyoutOverviewTabFeature?.render;
-  return render ? render({ hit, ...docViewProps, onAlertUpdated: handleAlertUpdated }) : null;
+  return render
+    ? render({ hit, ...docViewProps, onAlertUpdated: handleAlertUpdated, timeRange })
+    : null;
 };

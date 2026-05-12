@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import type { DataTableRecord } from '@kbn/discover-utils';
+import type { TimeRange } from '@kbn/es-query';
 import type { DocViewRenderProps } from '@kbn/unified-doc-viewer/types';
 import { EuiSpacer } from '@elastic/eui';
 import type { CellActionRenderer } from '../../flyout_v2/shared/components/cell_actions';
@@ -40,6 +41,10 @@ export interface AlertFlyoutOverviewTabProps {
    */
   columns?: DocViewRenderProps['columns'];
   /**
+   * Current Discover time range used by flyout insights.
+   */
+  timeRange: TimeRange;
+  /**
    * Discover filter callback used by flyout cell actions.
    */
   filter?: DocViewRenderProps['filter'];
@@ -59,6 +64,7 @@ export const AlertFlyoutOverviewTab = ({
   storePromise,
   onAlertUpdated,
   columns,
+  timeRange,
   filter,
   onAddColumn,
   onRemoveColumn,
@@ -115,6 +121,7 @@ export const AlertFlyoutOverviewTab = ({
         hit={hit}
         renderCellActions={renderCellActions}
         onAlertUpdated={onAlertUpdated}
+        timeRange={timeRange}
       />
     ),
   });
@@ -133,6 +140,10 @@ interface AlertFlyoutOverviewTabContentProps {
    * Callback invoked after alert mutations to refresh the Discover table.
    */
   onAlertUpdated: () => void;
+  /**
+   * Current Discover time range used by flyout insights.
+   */
+  timeRange: TimeRange;
 }
 
 /**
@@ -142,6 +153,7 @@ const AlertFlyoutOverviewTabContent = ({
   hit,
   renderCellActions,
   onAlertUpdated,
+  timeRange,
 }: AlertFlyoutOverviewTabContentProps) => {
   const isInSecurityApp = useIsInSecurityApp();
 
@@ -153,6 +165,7 @@ const AlertFlyoutOverviewTabContent = ({
         hit={hit}
         renderCellActions={renderCellActions}
         onAlertUpdated={onAlertUpdated}
+        timerangeOverride={timeRange}
       />
     </>
   );

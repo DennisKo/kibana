@@ -62,6 +62,7 @@ jest.mock('../../common/hooks/is_in_security_app', () => ({
 
 describe('AlertFlyoutOverviewTab', () => {
   const onAlertUpdated = jest.fn();
+  const timeRange = { from: 'now-15m', to: 'now' };
   const servicesMock = {
     core: { overlays: {} },
     uiActions: {
@@ -114,6 +115,7 @@ describe('AlertFlyoutOverviewTab', () => {
           servicesPromise={servicesPromise}
           storePromise={storePromise}
           onAlertUpdated={onAlertUpdated}
+          timeRange={timeRange}
         />
       );
     });
@@ -160,6 +162,7 @@ describe('AlertFlyoutOverviewTab', () => {
           servicesPromise={servicesPromise}
           storePromise={storePromise}
           onAlertUpdated={onAlertUpdated}
+          timeRange={timeRange}
         />
       );
       await servicesPromise;
@@ -196,6 +199,7 @@ describe('AlertFlyoutOverviewTab', () => {
           servicesPromise={servicesPromise}
           storePromise={storePromise}
           onAlertUpdated={onAlertUpdated}
+          timeRange={timeRange}
         />
       );
       await Promise.resolve();
@@ -228,6 +232,7 @@ describe('AlertFlyoutOverviewTab', () => {
           servicesPromise={servicesPromise}
           storePromise={storePromise}
           onAlertUpdated={onAlertUpdated}
+          timeRange={timeRange}
         />
       );
       await Promise.resolve();
@@ -265,6 +270,7 @@ describe('AlertFlyoutOverviewTab', () => {
           servicesPromise={servicesPromise}
           storePromise={Promise.resolve(storeLoading as never)}
           onAlertUpdated={onAlertUpdated}
+          timeRange={timeRange}
         />
       );
       await Promise.resolve();
@@ -277,6 +283,7 @@ describe('AlertFlyoutOverviewTab', () => {
           servicesPromise={servicesPromise}
           storePromise={Promise.resolve(storeReady as never)}
           onAlertUpdated={onAlertUpdated}
+          timeRange={timeRange}
         />
       );
       await Promise.resolve();
@@ -305,6 +312,7 @@ describe('AlertFlyoutOverviewTab', () => {
           servicesPromise={Promise.resolve(servicesMock)}
           storePromise={Promise.resolve(store as never)}
           onAlertUpdated={onAlertUpdated}
+          timeRange={timeRange}
         />
       </Router>
     );
@@ -328,6 +336,7 @@ describe('AlertFlyoutOverviewTab', () => {
         servicesPromise={Promise.resolve(servicesMock)}
         storePromise={Promise.resolve(store as never)}
         onAlertUpdated={onAlertUpdated}
+        timeRange={timeRange}
         columns={['host.name']}
         filter={jest.fn()}
         onAddColumn={jest.fn()}
@@ -342,6 +351,7 @@ describe('AlertFlyoutOverviewTab', () => {
     expect(mockOverviewTab).toHaveBeenCalledWith(
       expect.objectContaining({
         renderCellActions: expect.any(Function),
+        timerangeOverride: timeRange,
       })
     );
 
@@ -370,6 +380,7 @@ describe('AlertFlyoutOverviewTab', () => {
           servicesPromise={Promise.resolve(servicesMock)}
           storePromise={Promise.resolve(store as never)}
           onAlertUpdated={onAlertUpdated}
+          timeRange={timeRange}
         />
       );
       await Promise.resolve();
@@ -397,6 +408,7 @@ describe('AlertFlyoutOverviewTab', () => {
           servicesPromise={Promise.resolve(servicesMock)}
           storePromise={Promise.resolve(store as never)}
           onAlertUpdated={onAlertUpdated}
+          timeRange={timeRange}
         />
       );
       await Promise.resolve();

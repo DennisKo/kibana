@@ -19,6 +19,7 @@ import { css } from '@emotion/react';
 import get from 'lodash/get';
 import { getOr } from 'lodash/fp';
 import { i18n } from '@kbn/i18n';
+import type { TimeRange } from '@kbn/es-query';
 import {
   MISCONFIGURATION_INSIGHT_HOST_ENTITY_OVERVIEW,
   VULNERABILITIES_INSIGHT_HOST_ENTITY_OVERVIEW,
@@ -120,6 +121,10 @@ export interface HostEntityOverviewProps {
    * leave this off so everything renders as plain text.
    */
   enableEntityLinks?: boolean;
+  /**
+   * Time range supplied by the host application for time-bound insights.
+   */
+  timerangeOverride?: TimeRange;
 }
 
 export const HOST_PREVIEW_BANNER = {
@@ -140,8 +145,11 @@ export const HostEntityOverview: React.FC<HostEntityOverviewProps> = ({
   scopeId = '',
   renderCellActions = noopCellActionRenderer,
   enableEntityLinks = false,
+  timerangeOverride,
 }) => {
-  const { from, to } = useGlobalTime();
+  const globalTime = useGlobalTime();
+  const from = timerangeOverride?.from ?? globalTime.from;
+  const to = timerangeOverride?.to ?? globalTime.to;
   const { selectedPatterns: oldSelectedPatterns } = useSourcererDataView();
   const entityStoreV2Enabled = useUiSetting<boolean>(FF_ENABLE_ENTITY_STORE_V2, false);
   const euidApi = useEntityStoreEuidApi();
@@ -435,6 +443,7 @@ export const HostEntityOverview: React.FC<HostEntityOverviewProps> = ({
         entityType={EntityType.host}
         queryId={`${DETECTION_RESPONSE_ALERTS_BY_STATUS_ID}-${HOST_ENTITY_OVERVIEW_ID}`}
         data-test-subj={ENTITIES_HOST_OVERVIEW_ALERT_COUNT_TEST_ID}
+        timerangeOverride={timerangeOverride}
       />
       <MisconfigurationsInsight
         identityFields={hostIdentityFields}

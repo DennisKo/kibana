@@ -8,6 +8,7 @@
 import React, { memo } from 'react';
 import { EuiHorizontalRule } from '@elastic/eui';
 import type { DataTableRecord } from '@kbn/discover-utils';
+import type { TimeRange } from '@kbn/es-query';
 import type { CellActionRenderer } from '../../shared/components/cell_actions';
 import { AboutSection } from '../components/about_section';
 import { InsightsSection } from '../components/insights_section';
@@ -27,29 +28,36 @@ export interface OverviewTabProps {
    * Callback invoked after alert mutations to refresh parent flyout content.
    */
   onAlertUpdated: () => void;
+  /**
+   * Time range supplied by the host application for time-bound insights.
+   */
+  timerangeOverride?: TimeRange;
 }
 
 /**
  * Overview view displayed in the document details expandable flyout right section
  */
-export const OverviewTab = memo(({ hit, renderCellActions, onAlertUpdated }: OverviewTabProps) => (
-  <>
-    <AboutSection hit={hit} />
-    <EuiHorizontalRule margin="m" />
-    <InvestigationSection hit={hit} renderCellActions={renderCellActions} />
-    <EuiHorizontalRule margin="m" />
-    <VisualizationsSection
-      hit={hit}
-      renderCellActions={renderCellActions}
-      onAlertUpdated={onAlertUpdated}
-    />
-    <EuiHorizontalRule margin="m" />
-    <InsightsSection
-      hit={hit}
-      renderCellActions={renderCellActions}
-      onAlertUpdated={onAlertUpdated}
-    />
-  </>
-));
+export const OverviewTab = memo(
+  ({ hit, renderCellActions, onAlertUpdated, timerangeOverride }: OverviewTabProps) => (
+    <>
+      <AboutSection hit={hit} />
+      <EuiHorizontalRule margin="m" />
+      <InvestigationSection hit={hit} renderCellActions={renderCellActions} />
+      <EuiHorizontalRule margin="m" />
+      <VisualizationsSection
+        hit={hit}
+        renderCellActions={renderCellActions}
+        onAlertUpdated={onAlertUpdated}
+      />
+      <EuiHorizontalRule margin="m" />
+      <InsightsSection
+        hit={hit}
+        renderCellActions={renderCellActions}
+        onAlertUpdated={onAlertUpdated}
+        timerangeOverride={timerangeOverride}
+      />
+    </>
+  )
+);
 
 OverviewTab.displayName = 'OverviewTab';

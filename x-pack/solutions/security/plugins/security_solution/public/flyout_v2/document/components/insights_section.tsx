@@ -6,6 +6,7 @@
  */
 
 import { type DataTableRecord, getFieldValue } from '@kbn/discover-utils';
+import type { TimeRange } from '@kbn/es-query';
 import { i18n } from '@kbn/i18n';
 import React, { memo, useCallback, useMemo } from 'react';
 import { EVENT_KIND } from '@kbn/rule-data-utils';
@@ -62,6 +63,10 @@ export interface InsightsSectionProps {
    * Callback invoked after alert mutations to refresh parent flyout content.
    */
   onAlertUpdated: () => void;
+  /**
+   * Time range supplied by the host application for time-bound insights.
+   */
+  timerangeOverride?: TimeRange;
 }
 
 /**
@@ -69,7 +74,7 @@ export interface InsightsSectionProps {
  * Content to be added soon.
  */
 export const InsightsSection = memo(
-  ({ hit, renderCellActions, onAlertUpdated }: InsightsSectionProps) => {
+  ({ hit, renderCellActions, onAlertUpdated, timerangeOverride }: InsightsSectionProps) => {
     const { services } = useKibana();
     const { overlays } = services;
     const store = useStore();
@@ -214,7 +219,12 @@ export const InsightsSection = memo(
         sectionId={LOCAL_STORAGE_SECTION_KEY}
         title={INSIGHTS_SECTION_TITLE}
       >
-        <EntitiesOverview hit={hit} renderCellActions={renderCellActions} showIcon={false} />
+        <EntitiesOverview
+          hit={hit}
+          renderCellActions={renderCellActions}
+          showIcon={false}
+          timerangeOverride={timerangeOverride}
+        />
         {isAlert && (
           <ThreatIntelligenceOverview
             hit={hit}

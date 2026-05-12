@@ -453,7 +453,15 @@ export class Plugin implements IPlugin<PluginSetup, PluginStart, SetupPlugins, S
 
     const alertFlyoutOverviewTabFeature: SecuritySolutionAlertFlyoutOverviewTabFeature = {
       id: 'security-solution-alert-flyout-overview-tab',
-      render: ({ hit, onAlertUpdated, columns, filter, onAddColumn, onRemoveColumn }) => {
+      render: ({
+        hit,
+        onAlertUpdated,
+        columns,
+        filter,
+        onAddColumn,
+        onRemoveColumn,
+        timeRange,
+      }) => {
         const servicesPromise = this.getDiscoverFlyoutServices(core);
         const storePromise = this.getDiscoverFlyoutStore(core);
 
@@ -468,6 +476,7 @@ export class Plugin implements IPlugin<PluginSetup, PluginStart, SetupPlugins, S
               filter={filter}
               onAddColumn={onAddColumn}
               onRemoveColumn={onRemoveColumn}
+              timeRange={timeRange}
             />
           </React.Suspense>
         );

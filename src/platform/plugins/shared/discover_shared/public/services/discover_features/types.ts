@@ -132,7 +132,7 @@ interface SecuritySolutionAlertFlyoutRenderProps extends DocViewRenderProps {
 
 export interface SecuritySolutionAlertFlyoutOverviewTabFeature {
   id: 'security-solution-alert-flyout-overview-tab';
-  render: (props: SecuritySolutionAlertFlyoutRenderProps) => JSX.Element;
+  render: (props: SecuritySolutionAlertFlyoutRenderProps & { timeRange: TimeRange }) => JSX.Element;
 }
 
 export interface SecuritySolutionAlertFlyoutHeaderTitleFeature {

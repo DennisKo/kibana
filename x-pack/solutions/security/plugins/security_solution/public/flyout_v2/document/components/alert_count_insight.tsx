@@ -17,6 +17,7 @@ import {
   useEuiTheme,
 } from '@elastic/eui';
 import { FormattedMessage } from '@kbn/i18n-react';
+import type { TimeRange } from '@kbn/es-query';
 import { InsightDistributionBar } from './insight_distribution_bar';
 import { getSeverityColor } from '../../../detections/components/alerts_kpis/severity_level_panel/helpers';
 import { FormattedCount } from '../../../common/components/formatted_number';
@@ -64,6 +65,10 @@ interface AlertCountInsightProps {
    * Callback to show alert count details. When omitted, the count is rendered as plain text.
    */
   onShowAlertCountDetails?: () => void;
+  /**
+   * Time range supplied by the host application for time-bound insights.
+   */
+  timerangeOverride?: TimeRange;
 }
 
 /**
@@ -111,10 +116,13 @@ export const AlertCountInsight: React.FC<AlertCountInsightProps> = ({
   queryId = DETECTION_RESPONSE_ALERTS_BY_STATUS_ID,
   direction,
   onShowAlertCountDetails,
+  timerangeOverride,
   'data-test-subj': dataTestSubj,
 }) => {
   const { euiTheme } = useEuiTheme();
-  const { to, from } = useGlobalTime();
+  const globalTime = useGlobalTime();
+  const from = timerangeOverride?.from ?? globalTime.from;
+  const to = timerangeOverride?.to ?? globalTime.to;
   const { signalIndexName } = useSignalIndex();
 
   const { items, isLoading } = useAlertsByStatus({

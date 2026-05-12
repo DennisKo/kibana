@@ -26,6 +26,7 @@ const createMockHit = (flattened: DataTableRecord['flattened']): DataTableRecord
 const hit = createMockHit({
   'event.kind': 'signal',
 });
+const timeRange = { from: 'now-15m', to: 'now' };
 
 describe('EnhancedAlertEventOverview', () => {
   it('renders the security solution overview tab feature', async () => {
@@ -40,6 +41,9 @@ describe('EnhancedAlertEventOverview', () => {
             }),
           },
         },
+      },
+      timefilter: {
+        getTime: jest.fn().mockReturnValue(timeRange),
       },
     } as unknown as ProfileProviderServices;
 
@@ -59,6 +63,7 @@ describe('EnhancedAlertEventOverview', () => {
           hit,
           dataView: dataViewMock,
           onAlertUpdated: expect.any(Function),
+          timeRange,
         })
       )
     );
