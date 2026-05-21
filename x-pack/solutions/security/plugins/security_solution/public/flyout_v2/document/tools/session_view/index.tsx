@@ -14,6 +14,7 @@ import { type DataTableRecord } from '@kbn/discover-utils';
 import type { Process, ProcessEvent } from '@kbn/session-view-plugin/common';
 import { useHistory } from 'react-router-dom';
 import { useStore } from 'react-redux';
+import { ToolsFlyoutBanner } from '../../../shared/components/tools_flyout_banner';
 import { ToolsFlyoutHeader } from '../../../shared/components/tools_flyout_header';
 import type { CellActionRenderer } from '../../../shared/components/cell_actions';
 import type { SessionViewConfig } from '../../../../../common/types/session_view';
@@ -205,6 +206,7 @@ export const SessionView: FC<SessionViewProps> = memo(
 
     return (
       <>
+        <ToolsFlyoutBanner title={TITLE} />
         <EuiFlyoutHeader
           hasBorder
           css={css`

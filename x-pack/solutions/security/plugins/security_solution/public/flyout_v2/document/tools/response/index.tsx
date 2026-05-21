@@ -10,6 +10,7 @@ import React, { memo } from 'react';
 import { EuiFlyoutBody, EuiFlyoutHeader, useEuiTheme } from '@elastic/eui';
 import type { DataTableRecord } from '@kbn/discover-utils';
 import { i18n } from '@kbn/i18n';
+import { ToolsFlyoutBanner } from '../../../shared/components/tools_flyout_banner';
 import { ToolsFlyoutHeader } from '../../../shared/components/tools_flyout_header';
 import { ResponseDetailsContent } from './components/response_details';
 
@@ -32,6 +33,7 @@ export const ResponseDetails = memo(({ hit }: ResponseDetailsProps) => {
 
   return (
     <>
+      <ToolsFlyoutBanner title={TITLE} />
       <EuiFlyoutHeader
         hasBorder
         css={css`

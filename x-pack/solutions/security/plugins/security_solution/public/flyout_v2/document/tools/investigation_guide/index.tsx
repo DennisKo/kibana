@@ -19,6 +19,7 @@ import { i18n } from '@kbn/i18n';
 import type { DataTableRecord } from '@kbn/discover-utils';
 import { getFieldValue } from '@kbn/discover-utils';
 import { useRuleWithFallback } from '../../../../detection_engine/rule_management/logic/use_rule_with_fallback';
+import { ToolsFlyoutBanner } from '../../../shared/components/tools_flyout_banner';
 import { ToolsFlyoutHeader } from '../../../shared/components/tools_flyout_header';
 import { InvestigationGuideView } from './components/investigation_guide_view';
 
@@ -57,6 +58,7 @@ export const InvestigationGuide = memo(({ hit }: InvestigationGuideProps) => {
 
   return (
     <>
+      <ToolsFlyoutBanner title={TITLE} />
       <EuiFlyoutHeader
         hasBorder
         css={css`

@@ -10,6 +10,7 @@ import React, { memo } from 'react';
 import { EuiFlyoutBody, EuiFlyoutHeader, useEuiTheme } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import type { DataTableRecord } from '@kbn/discover-utils';
+import { ToolsFlyoutBanner } from '../../../shared/components/tools_flyout_banner';
 import { ToolsFlyoutHeader } from '../../../shared/components/tools_flyout_header';
 import { ThreatIntelligenceDetailsView } from './components/threat_intelligence_details_view';
 
@@ -34,6 +35,7 @@ export const ThreatIntelligenceDetails = memo(({ hit }: ThreatIntelligenceDetail
 
   return (
     <>
+      <ToolsFlyoutBanner title={TITLE} />
       <EuiFlyoutHeader
         hasBorder
         css={css`

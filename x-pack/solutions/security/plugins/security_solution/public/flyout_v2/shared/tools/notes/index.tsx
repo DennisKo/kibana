@@ -11,6 +11,7 @@ import type { DataTableRecord } from '@kbn/discover-utils';
 import { EuiFlyoutBody, EuiFlyoutHeader, useEuiTheme } from '@elastic/eui';
 import { i18n } from '@kbn/i18n';
 import { useSelector } from 'react-redux';
+import { ToolsFlyoutBanner } from '../../components/tools_flyout_banner';
 import { ToolsFlyoutHeader } from '../../components/tools_flyout_header';
 import { useTimelineConfig } from './hooks/use_timeline_config';
 import { useIsInSecurityApp } from '../../../../common/hooks/is_in_security_app';
@@ -61,6 +62,7 @@ export const NotesDetails = memo(({ hit }: NotesDetailsProps) => {
 
   return (
     <>
+      <ToolsFlyoutBanner title={TITLE} />
       <NotesRemoteCallout hit={hit} />
       <EuiFlyoutHeader
         hasBorder
